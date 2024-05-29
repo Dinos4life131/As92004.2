@@ -11,6 +11,8 @@ def print_rounds_function():
             infinite_rounds = False
             print(f"{num_rounds} rounds it is!")
             break
- 
+        else:
+            print("Invalid input! Please enter a valid number or press Enter for infinite rounds.")
+    
 if __name__ == "__main__":
     print_rounds_function()
