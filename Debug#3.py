@@ -48,11 +48,12 @@ def generate_questions(topic, num_questions):
     for _ in range(num_questions):
         num1 = random.randint(0, 100)
         num2 = random.randint(0, 100)
-        num3 = random.randint(0, 10)    # Multiplication
-        num4 = random.randint(0, 10)    # Multiplication
+        num3 = random.randint(0, 10)  # Multiplication
+        num4 = random.randint(0, 10)  # Multiplication
         if topic == 1:  # Multiplication
             question = f"What is {num3} * {num4}?"
-            answer = num3 * num4
+            answer = num1 * num2
+            #Issue was i forgot to change the answer, thus the answer was the the answer for the question.
         elif topic == 2:  # Addition
             question = f"What is {num1} + {num2}?"
             answer = num1 + num2
@@ -61,7 +62,30 @@ def generate_questions(topic, num_questions):
             answer = num1 - num2
         questions.append((question, answer))
     return questions
-    
+
+def generate_questions(topic, num_questions):
+    questions = []
+    for _ in range(num_questions):
+        num1 = random.randint(0, 100)
+        num2 = random.randint(0, 100)
+        num3 = random.randint(0, 10)
+        num4 = random.randint(0, 10)
+        if topic == 1:  # Multiplication
+            question = f"What is {num3} * {num4}?"
+            answer = num1 * num2
+            #code that generates random questions, thus not allowing users to memorize questions.
+            ''' correct code
+            answer = num3 * num4
+            '''
+
+        elif topic == 2:  # Addition
+            question = f"What is {num1} + {num2}?"
+            answer = num1 + num2
+        elif topic == 3:  # Subtraction
+            question = f"What is {num1} - {num2}?"
+            answer = num1 - num2
+        questions.append((question, answer))
+    return questions
 
 if __name__ == "__main__":
     infinite_rounds, num_rounds = print_rounds_function()
@@ -80,9 +104,19 @@ if __name__ == "__main__":
         for i, (question, answer) in enumerate(questions):
             print(f"Question {round_counter + 1}:\n{question}")
             #Prints the question and question number. 
-        # Inside the while loop
-        # Inside the while loop
-        try:
+        try:    
+            user_answer = int(input("Your answer: "))
+            if user_answer == 'answer':
+                print("Correct!\n")
+                correct_count += 1
+            else:
+                print("Wrong!\n")    
+                wrong_answers.append((question, user_answer, answer))
+        except ValueError:
+            print(f"Invalid input! The correct answer is {answer}.\n")
+            # fixed this part of code so it works correctly
+            ''' Correct code
+                    try:
             user_answer = int(input("Your answer: "))
             if user_answer == answer:
                 print("Correct!\n")
@@ -92,15 +126,10 @@ if __name__ == "__main__":
                 wrong_answers.append((question, user_answer, answer))
 
         except ValueError:
-                print(f"Invalid input! The correct answer is {answer}.\n")
-
-
+                print(f"Invalid input! The correct answer is {answer}.\n")'''
         
         round_counter += 1
         if not infinite_rounds and round_counter >= num_rounds:
             break
 
     print(f"You answered {correct_count} out of {round_counter} questions correctly.\n")
-
-
-    

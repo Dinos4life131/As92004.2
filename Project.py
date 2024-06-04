@@ -65,8 +65,10 @@ def generate_questions(topic, num_questions):
     for _ in range(num_questions):
         num1 = random.randint(0, 100)
         num2 = random.randint(0, 100)
+        num3 = random.randint(0, 10)
+        num4 = random.randint(0, 10)
         if topic == 1:  # Multiplication
-            question = f"What is {num1} * {num2}?"
+            question = f"What is {num3} * {num4}?"
             answer = num1 * num2
         elif topic == 2:  # Addition
             question = f"What is {num1} + {num2}?"
@@ -82,9 +84,12 @@ if __name__ == "__main__":
     topic_choice, topic_name = select_topic()
     print(f"Selected topic: {topic_name}")
     #print(f"Infinite rounds: {infinite_rounds}, Number of rounds: {num_rounds}")
-    print(f"You have selected {num_rounds} rounds of {topic_name}")
+    print(f"You have selected {num_rounds} round of {topic_name}")
 
+    correct_count = 0
+    wrong_answers = []
     round_counter = 0
+
         #This counts how many rounds has been done, each time a quesiton is answered it goes up by 1
     while infinite_rounds or round_counter < num_rounds:
         questions = generate_questions(topic_choice, 1)
@@ -93,14 +98,17 @@ if __name__ == "__main__":
             #Prints the question and question number. 
         try:    
             user_answer = int(input("Your answer: "))
-            if user_answer == answer:
+            if user_answer == 'answer':
                 print("Correct!\n")
+                correct_count += 1
             else:
                 print("Wrong!\n")    
+                wrong_answers.append((question, user_answer, answer))
         except ValueError:
             print(f"Invalid input! The correct answer is {answer}.\n")
         
         round_counter += 1
         if not infinite_rounds and round_counter >= num_rounds:
             break
-   
+
+    print(f"You answered {correct_count} out of {round_counter} questions correctly.\n")
