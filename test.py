@@ -68,7 +68,10 @@ if __name__ == "__main__":
     #print(f"Infinite rounds: {infinite_rounds}, Number of rounds: {num_rounds}")
     print(f"You have selected {num_rounds} round of {topic_name}")
 
+    correct_count = 0
+    wrong_answers = []
     round_counter = 0
+
         #This counts how many rounds has been done, each time a quesiton is answered it goes up by 1
     while infinite_rounds or round_counter < num_rounds:
         questions = generate_questions(topic_choice, 1)
@@ -79,13 +82,15 @@ if __name__ == "__main__":
             user_answer = int(input("Your answer: "))
             if user_answer == 'answer':
                 print("Correct!\n")
+                correct_count += 1
             else:
                 print("Wrong!\n")    
-        except ValueError == "End":
-            print(f"Invalid input! The correct answer is {answer}.\n")
+                wrong_answers.append((question, user_answer, answer))
         except ValueError:
             print(f"Invalid input! The correct answer is {answer}.\n")
         
         round_counter += 1
         if not infinite_rounds and round_counter >= num_rounds:
             break
+
+    print(f"You answered {correct_count} out of {round_counter} questions correctly.\n")
