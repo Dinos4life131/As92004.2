@@ -67,6 +67,7 @@ if __name__ == "__main__":
     print(f"Selected topic: {topic_name}")
     #print(f"Infinite rounds: {infinite_rounds}, Number of rounds: {num_rounds}")
     print(f"You have selected {num_rounds} round of {topic_name}")
+    print('If you choose to quit before the quiz is over type "End quiz". ')
 
     round_counter = 0
         #This counts how many rounds has been done, each time a quesiton is answered it goes up by 1
@@ -75,17 +76,20 @@ if __name__ == "__main__":
         for i, (question, answer) in enumerate(questions):
             print(f"Question {round_counter + 1}:\n{question}")
             #Prints the question and question number. 
+        
         try:    
             user_answer = int(input("Your answer: "))
-            if user_answer == 'answer':
+            if user_answer == answer:
                 print("Correct!\n")
             else:
                 print("Wrong!\n")    
-        except ValueError == "End":
-            print(f"Invalid input! The correct answer is {answer}.\n")
         except ValueError:
             print(f"Invalid input! The correct answer is {answer}.\n")
         
         round_counter += 1
         if not infinite_rounds and round_counter >= num_rounds:
+            #due to infinite being a loop, the code goes forever, the bug? unable to stop the program even if you have had enough
+            
             break
+
+        #after multiple attempts, could not find a way to do what i wish to do, thus giving a night to think about it
