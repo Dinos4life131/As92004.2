@@ -80,8 +80,7 @@ if __name__ == "__main__":
         for i, (question, answer) in enumerate(questions):
             print(f"Question {round_counter + 1}:\n{question}")
             #Prints the question and question number. 
-        # Inside the while loop
-        # Inside the while loop
+
         try:
             user_answer = int(input("Your answer: "))
             if user_answer == answer:

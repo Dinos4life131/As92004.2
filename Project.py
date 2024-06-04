@@ -65,11 +65,12 @@ def generate_questions(topic, num_questions):
     for _ in range(num_questions):
         num1 = random.randint(0, 100)
         num2 = random.randint(0, 100)
-        num3 = random.randint(0, 10)
-        num4 = random.randint(0, 10)
+        num3 = random.randint(0, 10)    # Multiplication
+        num4 = random.randint(0, 10)    # Multiplication
         if topic == 1:  # Multiplication
             question = f"What is {num3} * {num4}?"
-            answer = num1 * num2
+            answer = num3 * num4
+            # fixed this part of code so it works correctly
         elif topic == 2:  # Addition
             question = f"What is {num1} + {num2}?"
             answer = num1 + num2
@@ -96,17 +97,18 @@ if __name__ == "__main__":
         for i, (question, answer) in enumerate(questions):
             print(f"Question {round_counter + 1}:\n{question}")
             #Prints the question and question number. 
-        try:    
+        try:
             user_answer = int(input("Your answer: "))
-            if user_answer == 'answer':
+            if user_answer == answer:
                 print("Correct!\n")
                 correct_count += 1
             else:
-                print("Wrong!\n")    
+                print(f"Wrong! The correct answer is {answer}.\n")
                 wrong_answers.append((question, user_answer, answer))
+
         except ValueError:
-            print(f"Invalid input! The correct answer is {answer}.\n")
-        
+                print(f"Invalid input! The correct answer is {answer}.\n")
+        #issue fixed with saying correct questions were wrong
         round_counter += 1
         if not infinite_rounds and round_counter >= num_rounds:
             break
