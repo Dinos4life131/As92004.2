@@ -1,13 +1,13 @@
 import random
 
 def print_rounds_function():
-    '''Prompt the user to enter the number of rounds and handle infinite rounds if desired.'''
+    '''Ask user how many rounds, if infinte the program can handle that'''
     while True:
         number_of_rounds = input("Enter the number of rounds you want to play (press Enter for infinite): ")
         
         if number_of_rounds == "":
             infinite_rounds = True
-            num_rounds = 'infinite'  # Set num_rounds to None since it's infinite
+            num_rounds = 'infinite'  # Set num_rounds to None cos it's infinite
             print("Infinite rounds it is!")
             break
         elif number_of_rounds.isdigit():
@@ -21,7 +21,7 @@ def print_rounds_function():
     return infinite_rounds, num_rounds
 
 def select_topic():
-    '''Function to let the user choose a topic from predefined topics.'''
+    '''Allows user to chose their topic.'''
     topics = {
         1: "Multiplication",
         2: "Addition",
@@ -34,7 +34,7 @@ def select_topic():
     
     while True:
         try:
-            topic_choice = int(input("Enter the number corresponding to your chosen topic: "))
+            topic_choice = int(input("Enter the number next to your chosen topic: "))
             if topic_choice in topics:
                 topic_name = topics[topic_choice]
                 return topic_choice, topic_name
@@ -46,11 +46,13 @@ def select_topic():
 def generate_questions(topic, num_questions):
     questions = []
     for _ in range(num_questions):
-        num1 = random.randint(0, 100)
-        num2 = random.randint(0, 100)
+        num1 = random.randint(0, 100)   # Addition & Subtraction
+        num2 = random.randint(0, 100)   # Addition & Subtraction
+        num3 = random.randint(0, 10)    # Multiplication
+        num4 = random.randint(0, 10)    # Multiplication
         if topic == 1:  # Multiplication
-            question = f"What is {num1} * {num2}?"
-            answer = num1 * num2
+            question = f"What is {num3} * {num4}?"
+            answer = num3 * num4
         elif topic == 2:  # Addition
             question = f"What is {num1} + {num2}?"
             answer = num1 + num2
@@ -60,25 +62,22 @@ def generate_questions(topic, num_questions):
         questions.append((question, answer))
     return questions
 
-def generate_questions(topic, num_questions):
-    questions = []
-    for _ in range(num_questions):
-        num1 = random.randint(0, 100)
-        num2 = random.randint(0, 100)
-        num3 = random.randint(0, 10)    # Multiplication
-        num4 = random.randint(0, 10)    # Multiplication
-        if topic == 1:  # Multiplication
-            question = f"What is {num3} * {num4}?"
-            answer = num3 * num4
-            # fixed this part of code so it works correctly
-        elif topic == 2:  # Addition
-            question = f"What is {num1} + {num2}?"
-            answer = num1 + num2
-        elif topic == 3:  # Subtraction
-            question = f"What is {num1} - {num2}?"
-            answer = num1 - num2
-        questions.append((question, answer))
-    return questions
+def review_wrong_answers(wrong_answers):
+    if wrong_answers:
+        try:
+            print("You have some wrong answers. Do you want to review them? (yes/no)")
+            review = input().strip().lower()
+            review_first_letter = review[0]
+
+            if review_first_letter == "y":
+                print("\nHere are the questions you got wrong:\n")
+                for i, (question, user_answer, correct_answer) in enumerate(wrong_answers):
+                    print(f"{i + 1}. {question} \nYour answer: {user_answer} \nCorrect answer: {correct_answer}\n")
+        except ValueError:
+            print("Invalid input! Please enter Yes or No.")
+    else:
+        print("Great job! You got all the questions correct!")
+   
 
 if __name__ == "__main__":
     infinite_rounds, num_rounds = print_rounds_function()
@@ -97,8 +96,15 @@ if __name__ == "__main__":
         for i, (question, answer) in enumerate(questions):
             print(f"Question {round_counter + 1}:\n{question}")
             #Prints the question and question number. 
+
         try:
-            user_answer = int(input("Your answer: "))
+            user_input = input("Your answer: ")
+            user_answer = 606
+            if user_input == "end":
+                break
+
+            user_answer = int(user_input)
+            
             if user_answer == answer:
                 print("Correct!\n")
                 correct_count += 1
@@ -108,9 +114,16 @@ if __name__ == "__main__":
 
         except ValueError:
                 print(f"Invalid input! The correct answer is {answer}.\n")
-        #issue fixed with saying correct questions were wrong
+                wrong_answers.append((question, user_answer, answer))
+
+
+        
         round_counter += 1
         if not infinite_rounds and round_counter >= num_rounds:
             break
 
-    print(f"You answered {correct_count} out of {round_counter} questions correctly.\n")
+    print(f"You answered {correct_count} out of {round_counter} questions correctly.")
+    percentage_correct = (correct_count / round_counter) * 100
+    print(f"You got {percentage_correct:.2f}% correct!\n")
+
+    review_wrong_answers(wrong_answers)
