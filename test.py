@@ -80,6 +80,8 @@ def review_wrong_answers(wrong_answers):
    
 
 if __name__ == "__main__":
+    play_again = True
+    print("Welcome to the math quiz.\nPlease follow the instructions provided.\nGoodluck 😉")
     infinite_rounds, num_rounds = print_rounds_function()
     topic_choice, topic_name = select_topic()
     print(f"Selected topic: {topic_name}")
@@ -126,7 +128,12 @@ if __name__ == "__main__":
     percentage_correct = (correct_count / round_counter) * 100
     print(f"You got {percentage_correct:.2f}% correct!\n")
 
-    review_wrong_answers(wrong_answers)
+    play_again_input = input("Do you want to play again? (yes/no): ").strip().lower()
+    if len(play_again_input) > 0:
+        play_again = play_again_input[0] == "y"
+    else:
+        play_again = False
+print("D")
 
 
     

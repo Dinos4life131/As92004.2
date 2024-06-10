@@ -80,50 +80,55 @@ def review_wrong_answers(wrong_answers):
    
 
 if __name__ == "__main__":
-    infinite_rounds, num_rounds = print_rounds_function()
-    topic_choice, topic_name = select_topic()
-    print(f"Selected topic: {topic_name}")
-    #print(f"Infinite rounds: {infinite_rounds}, Number of rounds: {num_rounds}")
-    print(f"You have selected {num_rounds} round of {topic_name}")
+    play_again = True
 
-    correct_count = 0
-    wrong_answers = []
-    round_counter = 0
+    while play_again:
+        print("Welcome to the math quiz.\nPlease follow the instructions provided.\nGood luck 😉")
+        infinite_rounds, num_rounds = print_rounds_function()
+        topic_choice, topic_name = select_topic()
+        print(f"Selected topic: {topic_name}")
+        print(f"You have selected {num_rounds} round of {topic_name}")
 
-        #This counts how many rounds has been done, each time a quesiton is answered it goes up by 1
-    while infinite_rounds or round_counter < num_rounds:
-        questions = generate_questions(topic_choice, 1)
-        for i, (question, answer) in enumerate(questions):
-            print(f"Question {round_counter + 1}:\n{question}")
-            #Prints the question and question number. 
+        correct_count = 0
+        wrong_answers = []
+        round_counter = 0
 
-        try:
-            user_input = input("Your answer: ")
-            user_answer = 606
-            if user_input == "end":
+        while infinite_rounds or round_counter < num_rounds:
+            questions = generate_questions(topic_choice, 1)
+            for i, (question, answer) in enumerate(questions):
+                print(f"Question {round_counter + 1}:\n{question}")
+                try:
+                    user_input = input("Your answer: ")
+                    if user_input == "end":
+                        break
+                    elif not user_input.isdigit():
+                        raise ValueError("Invalid input! Please enter a number.")
+                    user_answer = int(user_input)
+
+                    if user_answer == answer:
+                        print("Correct!\n")
+                        correct_count += 1
+                    else:
+                        print(f"Wrong! The correct answer is {answer}.\n")
+                        wrong_answers.append((question, user_answer, answer))
+
+                except ValueError as ve:
+                    print(ve)
+
+            round_counter += 1
+            if not infinite_rounds and round_counter >= num_rounds:
                 break
 
-            user_answer = int(user_input)
-            
-            if user_answer == answer:
-                print("Correct!\n")
-                correct_count += 1
-            else:
-                print(f"Wrong! The correct answer is {answer}.\n")
-                wrong_answers.append((question, user_answer, answer))
+        print(f"You answered {correct_count} out of {round_counter} questions correctly.")
+        percentage_correct = (correct_count / round_counter) * 100
+        print(f"You got {percentage_correct:.2f}% correct!\n")
 
-        except ValueError:
-                print(f"Invalid input! The correct answer is {answer}.\n")
-                wrong_answers.append((question, user_answer, answer))
-
-
+        review_wrong_answers(wrong_answers)
         
-        round_counter += 1
-        if not infinite_rounds and round_counter >= num_rounds:
-            break
+        play_again_input = input("Do you want to play again? (yes/no): ").strip().lower()
+        if len(play_again_input) > 0:
+            play_again = play_again_input[0] == "y"
+        else:
+            play_again = False
 
-    print(f"You answered {correct_count} out of {round_counter} questions correctly.")
-    percentage_correct = (correct_count / round_counter) * 100
-    print(f"You got {percentage_correct:.2f}% correct!\n")
-
-    review_wrong_answers(wrong_answers)
+    print("Thanks for playing!")
