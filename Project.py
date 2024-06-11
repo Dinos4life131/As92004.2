@@ -62,6 +62,48 @@ def generate_questions(topic, num_questions):
         questions.append((question, answer))
     return questions
 
+def answer_questions(infinite_rounds, num_rounds, topic_choice):
+    correct_count = 0
+    wrong_answers = []
+    unanswered_questions = []
+    round_counter = 0
+
+    while infinite_rounds or (num_rounds is not None and round_counter < num_rounds):
+        questions = generate_questions(topic_choice, 1)
+        for i, (question, answer) in enumerate(questions):
+            print(f"Question {round_counter + 1}:\n{question}")
+            # Prints the question and question number. 
+            try:
+                user_input = input("Your answer: ").strip()
+                if user_input.lower() == "end":
+                    infinite_rounds = False
+                    num_rounds = round_counter  # To ensure the loop stops
+                    break
+                elif user_input == "":
+                    user_input = "not answered"
+                elif not user_input.isdigit() and user_input != "not answered":
+                    raise ValueError("Invalid input! Please enter a number.")
+                user_answer = int(user_input) if user_input.isdigit() else user_input
+
+                if user_input == "not answered":
+                    unanswered_questions.append((question, user_input, answer))
+                    print("You chose not to answer this question.\n")
+                elif user_answer == answer:
+                    print("Correct!\n")
+                    correct_count += 1
+                else:
+                    print(f"Wrong! The correct answer is {answer}.\n")
+                    wrong_answers.append((question, user_answer, answer))
+
+            except ValueError as ve:
+                print(ve)
+
+        round_counter += 1
+        if not infinite_rounds and round_counter >= num_rounds:
+            break
+
+    return correct_count, wrong_answers, unanswered_questions
+
 def review_wrong_answers(wrong_answers, unanswered_questions):
     if wrong_answers or unanswered_questions:
         while True:
@@ -95,47 +137,10 @@ if __name__ == "__main__":
         print(f"Selected topic: {topic_name}")
         print(f"You have selected {num_rounds if num_rounds is not None else 'infinite'} round(s) of {topic_name}")
 
-        correct_count = 0
-        wrong_answers = []
-        unanswered_questions = []
-        round_counter = 0
+        correct_count, wrong_answers, unanswered_questions = answer_questions(infinite_rounds, num_rounds, topic_choice)
 
-        while infinite_rounds or (num_rounds is not None and round_counter < num_rounds):
-            questions = generate_questions(topic_choice, 1)
-            for i, (question, answer) in enumerate(questions):
-                print(f"Question {round_counter + 1}:\n{question}")
-                # Prints the question and question number. 
-                try:
-                    user_input = input("Your answer: ").strip()
-                    if user_input.lower() == "end":
-                        infinite_rounds = False
-                        num_rounds = round_counter  # To ensure the loop stops
-                        break
-                    elif user_input == "":
-                        user_input = "not answered"
-                    elif not user_input.isdigit() and user_input != "not answered":
-                        raise ValueError("Invalid input! Please enter a number.")
-                    user_answer = int(user_input) if user_input.isdigit() else user_input
-
-                    if user_input == "not answered":
-                        unanswered_questions.append((question, user_input, answer))
-                        print("You chose not to answer this question.\n")
-                    elif user_answer == answer:
-                        print("Correct!\n")
-                        correct_count += 1
-                    else:
-                        print(f"Wrong! The correct answer is {answer}.\n")
-                        wrong_answers.append((question, user_answer, answer))
-
-                except ValueError as ve:
-                    print(ve)
-
-            round_counter += 1
-            if not infinite_rounds and round_counter >= num_rounds:
-                break
-
-        print(f"You answered {correct_count} out of {round_counter} questions correctly.")
-        percentage_correct = (correct_count / round_counter) * 100
+        print(f"You answered {correct_count} out of {len(wrong_answers) + len(unanswered_questions)} questions correctly.")
+        percentage_correct = (correct_count / (len(wrong_answers) + len(unanswered_questions))) * 100
         print(f"You got {percentage_correct:.2f}% correct!\n")
 
         review_wrong_answers(wrong_answers, unanswered_questions)
