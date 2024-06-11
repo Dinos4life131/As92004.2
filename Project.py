@@ -62,17 +62,17 @@ def generate_questions(topic, num_questions):
         questions.append((question, answer))
     return questions
 
-def review_wrong_answers(wrong_answers):
-    if wrong_answers:
+def review_wrong_answers(wrong_answers, unanswered_questions):
+    if wrong_answers or unanswered_questions:
         while True:
             try:
-                print("You have some wrong answers. Do you want to review them? (yes/no)")
+                print("You have some wrong answers and unanswered questions. Do you want to review them? (yes/no)")
                 review = input().strip().lower()
                 review_first_letter = review[0]
 
                 if review_first_letter == "y":
-                    print("\nHere are the questions you got wrong:\n")
-                    for i, (question, user_answer, correct_answer) in enumerate(wrong_answers):
+                    print("\nHere are the questions you got wrong and unanswered questions:\n")
+                    for i, (question, user_answer, correct_answer) in enumerate(wrong_answers + unanswered_questions):
                         print(f"{i + 1}. {question} \nYour answer: {user_answer} \nCorrect answer: {correct_answer}\n")
                     break
                 elif review_first_letter == "n":
@@ -97,6 +97,7 @@ if __name__ == "__main__":
 
         correct_count = 0
         wrong_answers = []
+        unanswered_questions = []
         round_counter = 0
 
         while infinite_rounds or (num_rounds is not None and round_counter < num_rounds):
@@ -105,16 +106,21 @@ if __name__ == "__main__":
                 print(f"Question {round_counter + 1}:\n{question}")
                 # Prints the question and question number. 
                 try:
-                    user_input = input("Your answer: ")
-                    if user_input.strip().lower() == "end":
+                    user_input = input("Your answer: ").strip()
+                    if user_input.lower() == "end":
                         infinite_rounds = False
                         num_rounds = round_counter  # To ensure the loop stops
                         break
-                    elif not user_input.isdigit():
+                    elif user_input == "":
+                        user_input = "not answered"
+                    elif not user_input.isdigit() and user_input != "not answered":
                         raise ValueError("Invalid input! Please enter a number.")
-                    user_answer = int(user_input)
+                    user_answer = int(user_input) if user_input.isdigit() else user_input
 
-                    if user_answer == answer:
+                    if user_input == "not answered":
+                        unanswered_questions.append((question, user_input, answer))
+                        print("You chose not to answer this question.\n")
+                    elif user_answer == answer:
                         print("Correct!\n")
                         correct_count += 1
                     else:
@@ -132,7 +138,7 @@ if __name__ == "__main__":
         percentage_correct = (correct_count / round_counter) * 100
         print(f"You got {percentage_correct:.2f}% correct!\n")
 
-        review_wrong_answers(wrong_answers)
+        review_wrong_answers(wrong_answers, unanswered_questions)
         
         play_again_input = input("Do you want to play again? (yes/no): ").strip().lower()
         if len(play_again_input) > 0:
