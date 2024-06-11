@@ -128,7 +128,6 @@ def review_wrong_answers(wrong_answers, unanswered_questions):
                 print(ve)
     else:
         print("Great job! You got all the questions correct!")
-   
 
 if __name__ == "__main__":
     play_again = True
@@ -142,9 +141,11 @@ if __name__ == "__main__":
 
         correct_count, wrong_answers, unanswered_questions = answer_questions(infinite_rounds, num_rounds, topic_choice)
 
-        print(f"You answered {correct_count} out of {len(wrong_answers) + len(unanswered_questions)} questions correctly.")
-        percentage_correct = (correct_count / (len(wrong_answers) + len(unanswered_questions))) * 100
-        print(f"You got {percentage_correct:.2f}% correct!\n")
+        total_questions = correct_count + len(wrong_answers) + len(unanswered_questions)
+        print(f"You answered {correct_count} out of {total_questions} questions correctly.")
+        if total_questions > 0:
+            percentage_correct = (correct_count / total_questions) * 100
+            print(f"You got {percentage_correct:.2f}% correct!\n")
 
         review_wrong_answers(wrong_answers, unanswered_questions)
         
