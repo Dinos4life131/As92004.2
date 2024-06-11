@@ -46,17 +46,21 @@ def select_topic():
 def generate_questions(topic, num_questions):
     questions = []
     for _ in range(num_questions):
-        num1 = random.randint(0, 100)   # Addition & Subtraction
-        num2 = random.randint(0, 100)   # Addition & Subtraction
-        num3 = random.randint(0, 10)    # Multiplication
-        num4 = random.randint(0, 10)    # Multiplication
         if topic == 1:  # Multiplication
+            num3 = random.randint(1, 10)    # Multiplication (ensuring non-negative numbers)
+            num4 = random.randint(1, 10)    # Multiplication (ensuring non-negative numbers)
             question = f"What is {num3} * {num4}?"
             answer = num3 * num4
         elif topic == 2:  # Addition
+            num1 = random.randint(0, 100)   # Addition
+            num2 = random.randint(0, 100)   # Addition
             question = f"What is {num1} + {num2}?"
             answer = num1 + num2
         elif topic == 3:  # Subtraction
+            num1 = random.randint(0, 100)   # Subtraction
+            num2 = random.randint(0, 100)   # Subtraction
+            if num1 < num2:  # Ensuring non-negative result
+                num1, num2 = num2, num1
             question = f"What is {num1} - {num2}?"
             answer = num1 - num2
         questions.append((question, answer))
@@ -82,7 +86,7 @@ def answer_questions(infinite_rounds, num_rounds, topic_choice):
                 elif user_input == "":
                     user_input = "not answered"
                 elif not user_input.isdigit() and user_input != "not answered":
-                    raise ValueError("Invalid input! Please enter a number.")
+                    raise ValueError("Invalid input! Please enter a positive number.")
                 user_answer = int(user_input) if user_input.isdigit() else user_input
 
                 if user_input == "not answered":
@@ -110,14 +114,12 @@ def review_wrong_answers(wrong_answers, unanswered_questions):
             try:
                 print("You have some wrong answers and unanswered questions. Do you want to review them? (yes/no)")
                 review = input().strip().lower()
-                review_first_letter = review[0]
-
-                if review_first_letter == "y":
+                if review.startswith("y"):
                     print("\nHere are the questions you got wrong and unanswered questions:\n")
                     for i, (question, user_answer, correct_answer) in enumerate(wrong_answers + unanswered_questions):
                         print(f"{i + 1}. {question} \nYour answer: {user_answer} \nCorrect answer: {correct_answer}\n")
                     break
-                elif review_first_letter == "n":
+                elif review.startswith("n"):
                     break
                 else:
                     raise ValueError("Invalid input! Please enter Yes or No.")
@@ -145,10 +147,15 @@ if __name__ == "__main__":
 
         review_wrong_answers(wrong_answers, unanswered_questions)
         
-        play_again_input = input("Do you want to play again? (yes/no): ").strip().lower()
-        if len(play_again_input) > 0:
-            play_again = play_again_input[0] == "y"
-        else:
-            play_again = False
+        while True:
+            play_again_input = input("Do you want to play again? (yes/no): ").strip().lower()
+            if play_again_input.startswith("y"):
+                play_again = True
+                break
+            elif play_again_input.startswith("n"):
+                play_again = False
+                break
+            else:
+                print("Invalid input! Please enter Yes or No.")
 
     print("Thank you for playing!")
