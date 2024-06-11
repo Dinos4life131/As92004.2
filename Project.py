@@ -8,7 +8,8 @@ def print_rounds_function():
         if number_of_rounds == "":
             infinite_rounds = True
             num_rounds = None  # Set num_rounds to None because it's infinite
-            print("Infinite rounds it is!")
+            print("\nInfinite rounds it is!")
+            print("If you want to end the quiz write 'End'\n")
             break
         elif number_of_rounds.isdigit():
             num_rounds = int(number_of_rounds)
@@ -159,3 +160,4 @@ if __name__ == "__main__":
                 print("Invalid input! Please enter Yes or No.")
 
     print("Thank you for playing!")
+
