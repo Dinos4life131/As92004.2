@@ -140,30 +140,18 @@ def review_wrong_answers(wrong_answers, unanswered_questions, all_answers):
                     for i, (question, user_answer, correct_answer) in enumerate(wrong_answers + unanswered_questions):
                         print(f"{i + 1}. {question} \nYour answer: {user_answer} \nCorrect answer: {correct_answer}\n")
 
-                    while True:
-                        print("\nDo you want to see the full history of your answers? (yes/no)")
-                        view_history = input().strip().lower()
-                        if view_history.startswith("y"):
-                            review_history(all_answers)
-                            break
-                        elif view_history.startswith("n"):
-                            break
-                        else:
-                            print("Invalid input! Please enter Yes or No.")
-
                     break
                 elif review.startswith("n"):
-                    print("\nDo you want to see the full history of your answers? (yes/no)")
-                    view_history = input().strip().lower()
-                    if view_history.startswith("y"):
-                        review_history(all_answers)
                     break
                 else:
                     raise ValueError("Invalid input! Please enter Yes or No.")
             except ValueError as ve:
                 print(ve)
-    else:
-        print("Great job! You got all the questions correct!")
+    
+    print("\nDo you want to see the full history of your answers? (yes/no)")
+    view_history = input().strip().lower()
+    if view_history.startswith("y"):
+        review_history(all_answers)
 
 if __name__ == "__main__":
     while True:
@@ -197,6 +185,7 @@ if __name__ == "__main__":
 
 
 
+
 #to add, invaild gives1 mroe chance, the first invail does nto count rtoward score.--- done
 #- counts as invaid and another chance. --- done
 #comment on every def and loop
@@ -212,3 +201,8 @@ ie 3 questions selected, put it is then saying 3 of 7 correct
 the first invaild try is counting towards socre (percentage) how i think its working
 skipped questions aka enter is sometimes working towards score and sometimes not- sometimes they count and sometimes not
 '''
+
+
+
+#add unexpected for seeing full history
+#round answer to nearest full number
