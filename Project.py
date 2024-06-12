@@ -11,13 +11,13 @@ def print_rounds_function():
             print("\nInfinite rounds it is!")
             print("If you want to end the quiz write 'End'\n")
             break
-        elif number_of_rounds.isdigit():
+        elif number_of_rounds.isdigit() and int(number_of_rounds) > 0:
             num_rounds = int(number_of_rounds)
             infinite_rounds = False
             print(f"{num_rounds} rounds it is!")
             break
         else:
-            print("Invalid input! Please enter a valid number or press Enter for infinite rounds.")
+            print("Invalid input! Please enter a positive number or press Enter for infinite rounds.")
     
     return infinite_rounds, num_rounds
 
@@ -139,7 +139,6 @@ def review_wrong_answers(wrong_answers, unanswered_questions, all_answers):
                     print("\nHere are the questions you got wrong and unanswered questions:\n")
                     for i, (question, user_answer, correct_answer) in enumerate(wrong_answers + unanswered_questions):
                         print(f"{i + 1}. {question} \nYour answer: {user_answer} \nCorrect answer: {correct_answer}\n")
-
                     break
                 elif review.startswith("n"):
                     break
@@ -148,10 +147,19 @@ def review_wrong_answers(wrong_answers, unanswered_questions, all_answers):
             except ValueError as ve:
                 print(ve)
     
-    print("\nDo you want to see the full history of your answers? (yes/no)")
-    view_history = input().strip().lower()
-    if view_history.startswith("y"):
-        review_history(all_answers)
+    while True:
+        try:
+            print("\nDo you want to see the full history of your answers? (yes/no)")
+            view_history = input().strip().lower()
+            if view_history.startswith("y"):
+                review_history(all_answers)
+                break
+            elif view_history.startswith("n"):
+                break
+            else:
+                raise ValueError("Invalid input! Please enter Yes or No.")
+        except ValueError as ve:
+            print(ve)
 
 if __name__ == "__main__":
     while True:
@@ -180,6 +188,7 @@ if __name__ == "__main__":
             break
 
     print("Thank you for playing!")
+
 
 
 
