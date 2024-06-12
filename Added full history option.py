@@ -1,4 +1,9 @@
 import random
+'''
+This is the code from the commit "Added full history option."
+This commit was choosen because it was the closest commit where the scoring system was working as intended
+
+'''
 
 
 def print_rounds_function():
@@ -186,51 +191,11 @@ if __name__ == "__main__":
             break
 
 
-    while True:
-        print("Welcome to the math quiz.\nPlease follow the instructions provided.\nGood luck 😉")
-        infinite_rounds, num_rounds = print_rounds_function()
-        topic_choice, topic_name = select_topic()
-        print(f"Selected topic: {topic_name}")
-        print(f"You have selected {num_rounds if num_rounds is not None else 'infinite'} round(s) of {topic_name}")
-
-        correct_count, all_answers = answer_questions(infinite_rounds, num_rounds, topic_choice)
-
-        total_valid_questions = correct_count + len([ans for ans in all_answers if ans[1] != "invalid" and ans[1] != "not answered" and ans[1] != ""])
-        print(f"You answered {correct_count} out of {total_valid_questions} valid questions correctly.")
-        if total_valid_questions > 0:
-            percentage_correct = (correct_count / total_valid_questions) * 100
-            print(f"You got {percentage_correct:.2f}% correct!\n")
-
-        review_wrong_answers(correct_count, all_answers)
-        
-        while True:
-            play_again_input = input("Do you want to play again? (yes/no): ").strip().lower()
-            if play_again_input.startswith("y"):
-                break
-            elif play_again_input.startswith("n"):
-                break
-            else:
-                print("Invalid input! Please enter Yes or No.")
-
-        if play_again_input.startswith("n"):
-            break
-
     print("Thank you for playing!")
 
 
 
-#to add, invaild gives1 mroe chance, the first invail does nto count rtoward score.--- done
-#- counts as invaid and another chance. --- done
-#comment on every def and loop
-#clarify invaild inputs do not count towards final score --- done
-
-
-
-''' 
-Need help---
-it says the user only did 5 question even if it was 3 etc
-the invailds are counting 2x even if they shouldnt be counting once.
-ie 3 questions selected, put it is then saying 3 of 7 correct
-the first invaild try is counting towards socre (percentage) how i think its working
-skipped questions aka enter is sometimes working towards score and sometimes not- sometimes they count and sometimes not
-'''
+    #to add, invaild gives1 mroe chance, the first invail does nto count rtoward score.--- done
+    #- counts as invaid and another chance. --- done
+    #comment on every def and loop
+    #clarify invaild inputs do not count towards final score --- done
