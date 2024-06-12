@@ -71,6 +71,7 @@ def answer_questions(infinite_rounds, num_rounds, topic_choice):
     correct_count = 0
     wrong_answers = []
     unanswered_questions = []
+    invalid_questions_count = 0
     round_counter = 0
 
     while infinite_rounds or (num_rounds is not None and round_counter < num_rounds):
@@ -78,35 +79,10 @@ def answer_questions(infinite_rounds, num_rounds, topic_choice):
         for i, (question, answer) in enumerate(questions):
             print(f"Question {round_counter + 1}:\n{question}")
             # Prints the question and question number. 
-            invalid_attempt = False
-            try:
-                user_input = input("Your answer: ").strip()
-                if user_input.lower() == "end":
-                    infinite_rounds = False
-                    num_rounds = round_counter  # To ensure the loop stops
-                    break
-                elif user_input == "":
-                    user_input = "not answered"
-                elif not user_input.isdigit() and user_input != "not answered":
-                    raise ValueError("Invalid input! Please enter a positive number.")
-                user_answer = int(user_input) if user_input.isdigit() else user_input
-
-                if user_input == "not answered":
-                    unanswered_questions.append((question, user_input, answer))
-                    print("You chose not to answer this question.\n")
-                elif user_answer == answer:
-                    print("Correct!\n")
-                    correct_count += 1
-                else:
-                    print(f"Wrong! The correct answer is {answer}.\n")
-                    wrong_answers.append((question, user_answer, answer))
-
-            except ValueError as ve:
-                print(ve)
-                invalid_attempt = True
-                print("You have one more chance to enter a valid answer.")
-                user_input = input("Your answer: ").strip()
+            invalid_attempts = 0
+            while invalid_attempts < 2:
                 try:
+                    user_input = input("Your answer: ").strip()
                     if user_input.lower() == "end":
                         infinite_rounds = False
                         num_rounds = round_counter  # To ensure the loop stops
@@ -126,16 +102,22 @@ def answer_questions(infinite_rounds, num_rounds, topic_choice):
                     else:
                         print(f"Wrong! The correct answer is {answer}.\n")
                         wrong_answers.append((question, user_answer, answer))
+                    
+                    break  # Break out of the invalid input loop if input is valid
+
                 except ValueError as ve:
                     print(ve)
-                    print("You did not provide a valid answer. This question will not count towards your percentage.")
-                    unanswered_questions.append((question, "invalid", answer))
+                    invalid_attempts += 1
+                    if invalid_attempts == 2:
+                        print("You did not provide a valid answer. This question will not count towards your percentage.")
+                        invalid_questions_count += 1
+                        unanswered_questions.append((question, "invalid", answer))
             
         round_counter += 1
         if not infinite_rounds and round_counter >= num_rounds:
             break
 
-    return correct_count, wrong_answers, unanswered_questions
+    return correct_count, wrong_answers, unanswered_questions, invalid_questions_count
 
 def review_wrong_answers(wrong_answers, unanswered_questions):
     if wrong_answers or unanswered_questions:
@@ -144,7 +126,7 @@ def review_wrong_answers(wrong_answers, unanswered_questions):
                 print("You have some wrong answers and unanswered questions. Do you want to review them? (yes/no)")
                 review = input().strip().lower()
                 if review.startswith("y"):
-                    print("\nHere are the questions you got wrong or unanswered questions:\n")
+                    print("\nHere are the questions you got wrong and unanswered questions:\n")
                     for i, (question, user_answer, correct_answer) in enumerate(wrong_answers + unanswered_questions):
                         print(f"{i + 1}. {question} \nYour answer: {user_answer} \nCorrect answer: {correct_answer}\n")
                     break
@@ -158,21 +140,19 @@ def review_wrong_answers(wrong_answers, unanswered_questions):
         print("Great job! You got all the questions correct!")
 
 if __name__ == "__main__":
-    play_again = True
-
-    while play_again:
+    while True:
         print("Welcome to the math quiz.\nPlease follow the instructions provided.\nGood luck 😉")
         infinite_rounds, num_rounds = print_rounds_function()
         topic_choice, topic_name = select_topic()
         print(f"Selected topic: {topic_name}")
         print(f"You have selected {num_rounds if num_rounds is not None else 'infinite'} round(s) of {topic_name}")
 
-        correct_count, wrong_answers, unanswered_questions = answer_questions(infinite_rounds, num_rounds, topic_choice)
+        correct_count, wrong_answers, unanswered_questions, invalid_questions_count = answer_questions(infinite_rounds, num_rounds, topic_choice)
 
-        total_questions = correct_count + len(wrong_answers) + len(unanswered_questions)
-        print(f"You answered {correct_count} out of {total_questions} questions correctly.")
-        if total_questions > 0:
-            percentage_correct = (correct_count / total_questions) * 100
+        total_valid_questions = correct_count + len(wrong_answers) + len(unanswered_questions) - invalid_questions_count
+        print(f"You answered {correct_count} out of {total_valid_questions} valid questions correctly.")
+        if total_valid_questions > 0:
+            percentage_correct = (correct_count / total_valid_questions) * 100
             print(f"You got {percentage_correct:.2f}% correct!\n")
 
         review_wrong_answers(wrong_answers, unanswered_questions)
@@ -180,18 +160,21 @@ if __name__ == "__main__":
         while True:
             play_again_input = input("Do you want to play again? (yes/no): ").strip().lower()
             if play_again_input.startswith("y"):
-                play_again = True
                 break
             elif play_again_input.startswith("n"):
-                play_again = False
                 break
             else:
                 print("Invalid input! Please enter Yes or No.")
 
+        if play_again_input.startswith("n"):
+            break
+
+
     print("Thank you for playing!")
 
 
-    #to add, invaild gives1 mroe chance, the first invail does nto count rtoward score.
-    #- counts as invaid and another chance
+
+    #to add, invaild gives1 mroe chance, the first invail does nto count rtoward score.--- done
+    #- counts as invaid and another chance. --- done
     #comment on every def and loop
-    # clarify invaild inputs do not count towards final score
+    #clarify invaild inputs do not count towards final score --- done
