@@ -171,9 +171,13 @@ if __name__ == "__main__":
         correct_count, wrong_answers, unanswered_questions, invalid_questions_count, all_answers = answer_questions(infinite_rounds, num_rounds, topic_choice)
         total_valid_questions = correct_count + len(wrong_answers) + len(unanswered_questions) - invalid_questions_count
         print(f"You answered {correct_count} out of {total_valid_questions} valid questions correctly.")
+        
         if total_valid_questions > 0:
+            #rounds the percentage to the nearst whole number
             percentage_correct = (correct_count / total_valid_questions) * 100
-            print(f"You got {percentage_correct:.2f}% correct!\n")
+            rounded_percentage = round(percentage_correct)
+            print(f"You got {rounded_percentage}% correct!\n")
+
         review_wrong_answers(wrong_answers, unanswered_questions, all_answers)
         
         while True:
@@ -187,7 +191,8 @@ if __name__ == "__main__":
         if play_again_input.startswith("n"):
             break
 
-    print("Thank you for playing!")
+    print("\nThank you for playing!\nWe hopefully you had fun and learned something new.\nSee you next time!")
+
 
 
 
@@ -213,5 +218,5 @@ skipped questions aka enter is sometimes working towards score and sometimes not
 
 
 
-#add unexpected for seeing full history
-#round answer to nearest full number
+#add unexpected for seeing full history === done
+#round answer to nearest full number === done
