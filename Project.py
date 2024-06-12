@@ -119,6 +119,16 @@ def answer_questions(infinite_rounds, num_rounds, topic_choice):
 
     return correct_count, wrong_answers, unanswered_questions, invalid_questions_count
 
+def review_history(correct_count, wrong_answers, unanswered_questions):
+    print("\nHere is the full history of your answers:\n")
+    for i, (question, user_answer, correct_answer) in enumerate(wrong_answers + unanswered_questions):
+        if user_answer == "invalid":
+            print(f"{i + 1}. {question} \nYour answer: INVALID \nCorrect answer: {correct_answer}\n")
+        elif user_answer == "not answered":
+            print(f"{i + 1}. {question} \nYour answer: NOT ANSWERED \nCorrect answer: {correct_answer}\n")
+        else:
+            print(f"{i + 1}. {question} \nYour answer: {user_answer} \nCorrect answer: {correct_answer}\n")
+
 def review_wrong_answers(wrong_answers, unanswered_questions):
     if wrong_answers or unanswered_questions:
         while True:
@@ -129,8 +139,24 @@ def review_wrong_answers(wrong_answers, unanswered_questions):
                     print("\nHere are the questions you got wrong and unanswered questions:\n")
                     for i, (question, user_answer, correct_answer) in enumerate(wrong_answers + unanswered_questions):
                         print(f"{i + 1}. {question} \nYour answer: {user_answer} \nCorrect answer: {correct_answer}\n")
+                    
+                    while True:
+                        print("\nDo you want to see the full history of your answers? (yes/no)")
+                        view_history = input().strip().lower()
+                        if view_history.startswith("y"):
+                            review_history(correct_count, wrong_answers, unanswered_questions)
+                            break
+                        elif view_history.startswith("n"):
+                            break
+                        else:
+                            print("Invalid input! Please enter Yes or No.")
+                    
                     break
                 elif review.startswith("n"):
+                    print("\nDo you want to see the full history of your answers? (yes/no)")
+                    view_history = input().strip().lower()
+                    if view_history.startswith("y"):
+                        review_history(correct_count, wrong_answers, unanswered_questions)
                     break
                 else:
                     raise ValueError("Invalid input! Please enter Yes or No.")
@@ -169,9 +195,7 @@ if __name__ == "__main__":
         if play_again_input.startswith("n"):
             break
 
-
     print("Thank you for playing!")
-
 
 
     #to add, invaild gives1 mroe chance, the first invail does nto count rtoward score.--- done
