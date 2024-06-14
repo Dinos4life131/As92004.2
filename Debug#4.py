@@ -109,6 +109,10 @@ if __name__ == "__main__":
 
         except ValueError:
                 print(f"Invalid input! The correct answer is {answer}.\n")
+                #wrong_answers.append((question, user_answer, answer))
+                
+                
+                
                 '''  To fixed it all i needed to do was copy the wrong_answer from above.
                         Added code
                 wrong_answers.append((question, user_answer, answer))
