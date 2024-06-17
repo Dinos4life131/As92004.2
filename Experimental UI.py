@@ -28,6 +28,7 @@ class MathQuizApp:
         self.rounds_label.pack(pady=5)
         self.rounds_entry = tk.Entry(self.root)
         self.rounds_entry.pack(pady=5)
+        self.rounds_entry.bind("<Return>", self.start_quiz)  # Bind Enter key to submit the number of rounds
 
         self.topics_label = tk.Label(self.root, text="Choose a topic:", font=("Helvetica", 12))
         self.topics_label.pack(pady=5)
@@ -47,7 +48,7 @@ class MathQuizApp:
         self.start_button = tk.Button(self.root, text="Start Quiz", command=self.start_quiz, font=("Helvetica", 12))
         self.start_button.pack(pady=10)
     
-    def start_quiz(self):
+    def start_quiz(self, event=None):
         number_of_rounds = self.rounds_entry.get().strip()
         
         if number_of_rounds == "":
@@ -69,8 +70,11 @@ class MathQuizApp:
         self.rounds_label.pack_forget()
         self.rounds_entry.pack_forget()
         self.topics_label.pack_forget()
+        self.start_button.pack_forget()
+        
         for widget in self.root.pack_slaves():
-            widget.pack_forget()
+            if isinstance(widget, tk.Radiobutton):
+                widget.pack_forget()
         
         self.ask_question()
 
@@ -209,3 +213,4 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = MathQuizApp(root)
     root.mainloop()
+
