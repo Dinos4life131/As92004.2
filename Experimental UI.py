@@ -82,45 +82,53 @@ class MathQuizApp:
         self.questions = self.generate_questions(self.topic_choice, 1)
         self.question, self.answer = self.questions[0]
         
-        self.question_label = tk.Label(self.root, text=f"Question {self.round_counter + 1}: {self.question}", font=("Helvetica", 14))
+        self.question_frame = tk.Frame(self.root)
+        self.question_frame.pack(pady=10)
+        
+        self.question_label = tk.Label(self.question_frame, text=f"Question {self.round_counter + 1}: {self.question}", font=("Helvetica", 14))
         self.question_label.pack(pady=10)
         
-        self.answer_entry = tk.Entry(self.root)
+        self.answer_entry = tk.Entry(self.question_frame)
         self.answer_entry.pack(pady=5)
+        self.answer_entry.bind("<Return>", self.check_answer)  # Bind Enter key to submit the answer
         
-        self.submit_button = tk.Button(self.root, text="Submit Answer", command=self.check_answer, font=("Helvetica", 12))
+        self.submit_button = tk.Button(self.question_frame, text="Submit Answer", command=self.check_answer, font=("Helvetica", 12))
         self.submit_button.pack(pady=10)
     
-    def check_answer(self):
+    def check_answer(self, event=None):
+        self.answer_entry.config(state=tk.DISABLED)  # Disable the entry field
+        self.submit_button.config(state=tk.DISABLED)  # Disable the submit button
+
         user_input = self.answer_entry.get().strip().lower()
         if user_input == "end":
             self.infinite_rounds = False
             self.end_quiz()
             return
         
+        result_text = ""
         try:
             user_answer = int(user_input) if user_input.isdigit() else user_input
             
             if user_answer == self.answer:
                 self.correct_count += 1
-                messagebox.showinfo("Correct!", "Correct!")
+                result_text = "Correct!"
             else:
                 self.wrong_answers.append((self.question, user_answer, self.answer))
-                messagebox.showinfo("Wrong!", f"Wrong! The correct answer is {self.answer}.")
+                result_text = f"Wrong! The correct answer is {self.answer}."
         
         except ValueError:
             self.invalid_questions_count += 1
-            messagebox.showerror("Invalid Input", "Invalid input! Please enter a number.")
+            result_text = "Invalid input! Please enter a number."
         
         self.round_counter += 1
-        self.question_label.pack_forget()
-        self.answer_entry.pack_forget()
-        self.submit_button.pack_forget()
+        self.question_label.config(text=f"Question {self.round_counter}: {self.question}\n{result_text}")
         
-        if not self.infinite_rounds and self.round_counter >= self.num_rounds:
-            self.end_quiz()
-        else:
-            self.ask_question()
+        self.answer_entry.delete(0, tk.END)
+        self.root.after(2000, self.next_question)  # Wait 2 seconds before moving to the next question
+    
+    def next_question(self):
+        self.question_frame.pack_forget()
+        self.ask_question()
 
     def generate_questions(self, topic, num_questions):
         questions = []
